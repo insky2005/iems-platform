@@ -1,0 +1,79 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+          http://www.springframework.org/schema/security  
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<!-- 配置不过滤的资源（静态资源及登录相关） -->
+	<security:http pattern="/css/**" security="none" />
+	<security:http pattern="/images/**" security="none" />
+	<security:http pattern="/js/**" security="none" />
+
+	<security:http pattern="/api/**" security="none" />
+
+	<security:http pattern="/login.jsp" security="none" />
+	<security:http pattern="/getCode" security="none" /><!-- 不过滤验证码 -->
+	<security:http pattern="/test/**" security="none" /><!-- 不过滤测试内容 -->
+
+	<security:http auto-config="true">
+    <security:intercept-url pattern="/index.jsp" access="ROLE_USER" />
+    
+		<security:intercept-url pattern="/hello/hello.do" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_SERVICE" />
+		
+		
+		<!-- session-management是针对session的管理. 这里可以不配置. 如有需求可以配置. -->  
+    <!-- id登陆唯一. 后登陆的账号会挤掉第一次登陆的账号  error-if-maximum-exceeded="true" 禁止2次登陆;   
+        session-fixation-protection="none" 防止伪造sessionid攻击. 用户登录成功后会销毁用户当前的session.   
+        创建新的session,并把用户信息复制到新session中.   
+     -->  
+    <security:session-management session-fixation-protection="none">  
+        <security:concurrency-control />  
+    </security:session-management>
+
+		<security:form-login login-page="/login.jsp"
+			authentication-failure-url="/login.jsp?error=true" default-target-url="/index.jsp" />
+			
+		<security:logout logout-success-url="/login.jsp" />
+		
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+		  <!-- 
+			<security:password-encoder hash="md5">
+				<security:salt-source user-property="username" />
+			</security:password-encoder>
+			 -->
+			
+			<security:user-service>
+				<security:user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN" />
+				<security:user name="test" password="test" authorities="ROLE_USER,ROLE_SERVICE" />
+				<security:user name="none" password="none" authorities="" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+  <!-- 国际化 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:config/messages_zh_CN" />
+	</bean>
+
+	<!-- 启用用户的缓存功能 -->
+	<bean id="userCache"
+		class="org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache">
+		<property name="cache" ref="userEhCache" />
+	</bean>
+
+	<bean id="userEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheName" value="userCache" />
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+	<bean id="cacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
+		
+</beans>

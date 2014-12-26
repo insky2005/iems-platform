@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.iems.core.counter.entity.SysCounter" table="SYS_COUNTER">
+		<comment></comment>
+		<id name="name" type="string">
+			<column name="NAME" length="300" />
+			<generator class="assigned" />
+		</id>
+		<property name="currentId" type="java.lang.Long">
+			<column name="CURRENTID" length="30" not-null="true">
+				<comment></comment>
+			</column>
+		</property>
+	</class>
+</hibernate-mapping>
