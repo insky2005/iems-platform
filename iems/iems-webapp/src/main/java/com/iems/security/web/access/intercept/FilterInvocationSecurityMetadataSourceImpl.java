@@ -92,6 +92,8 @@ public class FilterInvocationSecurityMetadataSourceImpl
 		if (logger.isDebugEnabled()) {
 			logger.debug("getAttributes(Object) - start"); //$NON-NLS-1$  
 		}
+		
+		// FIXME: 修正匹配规则
 		// guess object is a URL.
 		String url = ((FilterInvocation) object).getRequestUrl();
 		int firstQuestionMarkIndex = url.indexOf("?");
