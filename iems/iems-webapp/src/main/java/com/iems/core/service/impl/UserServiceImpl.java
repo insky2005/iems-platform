@@ -1,26 +1,32 @@
 package com.iems.core.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.iems.core.dao.ISysUserDao;
 import com.iems.core.entity.SysUser;
 import com.iems.core.service.IUserService;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements UserDetailsService, IUserService {
+
+	@Autowired
+	private ISysUserDao sysUserDaoImpl;
 
 	@Override
-	public List<SysUser> loadUsers() {
-		List<SysUser> userList = new ArrayList<SysUser>();
-		// User user;
-		int i = 0;
-		while (i++ < 10) {
-			SysUser user = new SysUser(String.valueOf(i), "username" + i, "123456");
-			userList.add(user);
+	public UserDetails loadUserByUsername(String username)
+			throws UsernameNotFoundException {
+
+		SysUser sysUser = this.sysUserDaoImpl.loadUserByUsername(username);
+
+		if (sysUser == null) {
+			throw new UsernameNotFoundException("Username Not Found");
 		}
-		return userList;
+
+		return (UserDetails) sysUser;
 	}
 
 }

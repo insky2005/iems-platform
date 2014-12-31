@@ -17,12 +17,14 @@
 	<security:http pattern="/getCode" security="none" /><!-- 不过滤验证码 -->
 	<security:http pattern="/test/**" security="none" /><!-- 不过滤测试内容 -->
 
-	<security:http auto-config="true">
+	<security:http auto-config="true" authentication-manager-ref="authenticationManager">
+	  <!-- 
     <security:intercept-url pattern="/index.jsp" access="ROLE_USER" />
     
-		<security:intercept-url pattern="/hello/hello.do" access="ROLE_ADMIN" />
-		<security:intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_SERVICE" />
-		
+		<security:intercept-url pattern="/hello/hello.do" access="ROLE_ADMINISTRATOR" />
+		<security:intercept-url pattern="/**" access="ROLE_ADMINISTRATOR,ROLE_USER" />
+		 -->
+		<security:custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
 		
 		<!-- session-management是针对session的管理. 这里可以不配置. 如有需求可以配置. -->  
     <!-- id登陆唯一. 后登陆的账号会挤掉第一次登陆的账号  error-if-maximum-exceeded="true" 禁止2次登陆;   
@@ -38,23 +40,116 @@
 			
 		<security:logout logout-success-url="/login.jsp" />
 		
+		<security:remember-me services-ref="rememberMeServices" />
+		
 	</security:http>
 
+
+	<!-- 一个自定义的filter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性， 
+		我们的所有控制将在这三个类中实现，解释详见具体配置 -->
+	<bean id="filterSecurityInterceptor"
+		class="com.iems.security.access.intercept.FilterSecurityInterceptorImpl">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
+		<property name="accessDecisionManager" ref="accessDecisionManager" />
+		<property name="securityMetadataSource" ref="securityMetadataSource" />
+	</bean>
+	<bean id="accessDecisionManager" 
+	  class="com.iems.security.access.AccessDecisionManagerImpl">
+	</bean>
+	<!-- 资源源数据定义，将所有的资源和权限对应关系建立起来，即定义某一资源可以被哪些角色访问 -->
+	<bean id="securityMetadataSource" 
+		class="com.iems.security.web.access.intercept.FilterInvocationSecurityMetadataSourceImpl">
+		<property name="resourceDetailsService" ref="resourceDetailsService" />
+	</bean>
+	
+  <bean id="resourceDetailsService" class="com.iems.core.service.impl.ResourceServiceImpl" />
+  
+	
+  
+  <!-- 
+	<bean id="rememberMeFilter"
+		class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+		<property name="rememberMeServices" ref="rememberMeServices" />
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	 -->
+
+  <!-- 
+	<bean id="tokenRepository"
+		class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	 -->
+	
+	<bean id="tokenRepository"
+    class="com.iems.security.web.authentication.rememberme.EhCacheTokenRepositoryImpl">
+    <property name="cache" ref="seriesTokensEhCache" />
+  </bean>
+	
+	<bean id="seriesTokensEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="seriesTokensCache" />
+    <property name="cacheManager" ref="cacheManager" />
+  </bean>
+	
+
+	<bean id="rememberMeServices"
+		class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+		<property name="userDetailsService" ref="userDetailsService" />
+		<property name="tokenRepository" ref="tokenRepository" />
+		<property name="key" value="REMEMBER_ME_KEY" />
+	</bean>
+
+	<bean id="rememberMeAuthenticationProvider"
+		class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		<property name="key" value="REMEMBER_ME_KEY" />
+	</bean>
+
+  <!-- 自定义UserDetailsService认证  -->
+	<bean id="userDetailsService" class="com.iems.core.service.impl.UserServiceImpl" />
+
+	<!-- 认证管理器 -->
+	<bean id="authenticationManager"
+		class="org.springframework.security.authentication.ProviderManager">
+		
+		<property name="providers">
+			<list>
+        <ref bean="rememberMeAuthenticationProvider" />
+				<ref bean="daoAuthenticationProvider" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 登录认证处理 -->
+	<bean id="daoAuthenticationProvider"
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="hideUserNotFoundExceptions" value="false" />
+		<property name="userDetailsService" ref="userDetailsService" />
+		<property name="passwordEncoder" ref="plaintextPasswordEncoder" />
+		<property name="saltSource" ref="saltSource" />
+		<property name="userCache" ref="userCache" />
+	</bean>
+
+	<!-- 加密方式 -->
+	<bean id="md5PasswordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+		
+		
+	<bean id="plaintextPasswordEncoder"
+    class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder" />
+
+	<!-- 配置加密盐值 -->
+	<bean id="saltSource"
+		class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<property name="userPropertyToUse" value="username" />
+	</bean>
+	
+	<!-- 
 	<security:authentication-manager>
-		<security:authentication-provider>
-		  <!-- 
-			<security:password-encoder hash="md5">
-				<security:salt-source user-property="username" />
-			</security:password-encoder>
-			 -->
-			
-			<security:user-service>
-				<security:user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN" />
-				<security:user name="test" password="test" authorities="ROLE_USER,ROLE_SERVICE" />
-				<security:user name="none" password="none" authorities="" />
-			</security:user-service>
+		<security:authentication-provider user-service-ref="userDetailsService" >
 		</security:authentication-provider>
 	</security:authentication-manager>
+	 -->
 
   <!-- 国际化 -->
 	<bean id="messageSource"
@@ -67,6 +162,7 @@
 		class="org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache">
 		<property name="cache" ref="userEhCache" />
 	</bean>
+
 
 	<bean id="userEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
 		<property name="cacheName" value="userCache" />

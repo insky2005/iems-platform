@@ -29,8 +29,8 @@ public class HelloRestController {
 
 	@RequestMapping(value = "/jsonfeed", produces = "application/json;charset=UTF-8")
 	public @ResponseBody Object getJSON(Model model) {
-		List<SysUser> userList = userServiceImpl.loadUsers();
-		model.addAttribute("items", userList);
+		//List<SysUser> userList = userServiceImpl.loadUsers();
+		//model.addAttribute("items", userList);
 		model.addAttribute("status", 0);
 
 		return model;

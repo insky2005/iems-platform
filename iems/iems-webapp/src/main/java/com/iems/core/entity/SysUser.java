@@ -2,13 +2,21 @@ package com.iems.core.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
-@XStreamAlias("user")
+@Entity(name="SysUser")
+@Table(name="SYS_USER")
 public class SysUser implements UserDetails, Serializable {
 
 	/**
@@ -16,29 +24,57 @@ public class SysUser implements UserDetails, Serializable {
 	 */
 	private static final long serialVersionUID = -5331275719227162188L;
 	
+	@Id
+	@Column(name="USERID")
 	private String userid;
+
+	@Column(name="USERNAME", length=100, unique=true)
 	private String username;
+	
+	@Column(name="PASSWORD", length=500)
 	private String password;
 	
+	@Column(name="ENABLED")
 	private boolean enabled = true;
+	@Column(name="ACCOUNT_NON_EXPIRED")
 	private boolean accountNonExpired = true;
+	@Column(name="ACCOUNT_NON_LOCKED")
 	private boolean accountNonLocked = true;
+	@Column(name="CREDENTIALS_NON_EXPIRED")
 	private boolean credentialsNonExpired = true;
 	
+	@Column(name="EMAIL", length=100, unique=true)
+	private String email;
+	@Column(name="MOBILE", length=20, unique=true)
+	private String mobile;
 	
-	private Collection<GrantedAuthority>  authorities;
+	@ManyToMany
+	@JoinTable(name="SYS_USERROLE", 
+		joinColumns={ @JoinColumn(name="USERID")},
+		inverseJoinColumns={ @JoinColumn(name="ROLEID")}
+	)
+	private List<SysRole> roles;
+
+	public SysUser() {
+		
+	}
 	
-	
-	public SysUser(String userid, String username, String password) {
+	public SysUser(String userid, String username, String password, boolean enabled, String email, String mobile) {
 		super();
 		this.userid = userid;
 		this.username = username;
 		this.password = password;
+		
+		this.enabled = enabled;
+		
+		this.email = email;
+		this.mobile = mobile;
 	}
 	
 	public String getUserid() {
 		return userid;
 	}
+	
 	
 	public void setUserid(String userid) {
 		this.userid = userid;
@@ -62,10 +98,23 @@ public class SysUser implements UserDetails, Serializable {
 	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+		return roles;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
 	}
 
 	@Override
@@ -74,10 +123,10 @@ public class SysUser implements UserDetails, Serializable {
 	}
 
 	@Override
-	public String getUsername() {
-		return username;
+	public boolean isEnabled() {
+		return enabled;
 	}
-
+	
 	@Override
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
@@ -93,11 +142,23 @@ public class SysUser implements UserDetails, Serializable {
 		return credentialsNonExpired;
 	}
 
-	@Override
-	public boolean isEnabled() {
-		return enabled;
+	
+	public String getEmail() {
+		return email;
 	}
 	
+	public String getMobile() {
+		return mobile;
+	}
+
 	
+	public List<SysRole> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<SysRole> roles) {
+		this.roles = roles;
+	}
+
 	
 }

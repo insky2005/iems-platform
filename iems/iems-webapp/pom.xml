@@ -295,7 +295,7 @@
 				<version>2.2</version>
 				<configuration>
 					<path>/iems</path>
-					<url>http://localhost:8080/manager/text</url>
+					<url>http://localhost:8081/manager/text</url>
 					<server>iems-tomcat-iems</server>
 				</configuration>
 			</plugin>

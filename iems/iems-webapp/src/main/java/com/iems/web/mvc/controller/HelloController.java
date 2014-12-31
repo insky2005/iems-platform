@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.iems.core.service.IUserService;
-import com.iems.core.util.CounterUtil;
 import com.iems.core.web.controller.AbstractWebController;
 
 @Controller

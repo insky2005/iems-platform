@@ -1,5 +1,5 @@
 package com.iems.core.service;
 
-public interface IUserService {
+public interface IRoleService {
 
 }

@@ -18,4 +18,12 @@
 		timeToIdleSeconds="600" 
 		timeToLiveSeconds="3600" 
 		overflowToDisk="true" />
+
+  <cache 
+    name="seriesTokensCache" 
+    maxElementsInMemory="100000" 
+    eternal="false"
+    timeToIdleSeconds="1209600" 
+    timeToLiveSeconds="1209600" 
+    overflowToDisk="true" />
 </ehcache> 
