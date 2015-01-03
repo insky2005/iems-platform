@@ -22,10 +22,11 @@
 	</bean>
 
 	<!-- 
-   -->
 	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/iems" resource-ref="true" />
+   -->
   
   <!-- 
+   -->
 	<bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource" destroy-method="reset">
 		<property name="alias" value="${proxool.alias}" />
 		<property name="driver" value="${proxool.driver}" />
@@ -39,7 +40,6 @@
     <property name="trace" value="${proxool.trace}" />
     <property name="verbose" value="${proxool.verbose}" />
 	</bean>
-   -->
 
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
