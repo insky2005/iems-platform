@@ -2,12 +2,12 @@ package com.iems.core.dao.impl;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.iems.core.dao.ISysResourceDao;
 import com.iems.core.entity.SysResource;
 
-@Component
+@Repository
 public class SysResourceDaoImpl extends BaseDaoImpl<SysResource, String> implements ISysResourceDao {
 
 	@Override

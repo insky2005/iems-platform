@@ -17,6 +17,13 @@
 		<!-- Theme style -->
 		<link href="assets/css/AdminLTE.css" rel="stylesheet" type="text/css" />
 
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="assets/libs/html5shiv/html5shiv.min.js"></script>
+		  <script src="assets/libs/respond.js/respond.min.js"></script>
+		<![endif]-->
+
 	</head>
 	<body class="bg-black">
 		<div class="form-box" id="login-box">

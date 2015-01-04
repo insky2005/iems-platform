@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.access.ConfigAttribute;
 
 import com.iems.security.access.resourcedetails.ResourceDetails;
@@ -49,6 +50,7 @@ public class SysResource implements ResourceDetails, Serializable {
 	private List<SysRole> roles;
 	
 	@Override
+	@JsonIgnore
 	public Collection<? extends ConfigAttribute> getAttributes() {
 		return roles;
 	}
@@ -86,6 +88,7 @@ public class SysResource implements ResourceDetails, Serializable {
 		this.url = url;
 	}
 
+	@JsonIgnore
 	public List<SysRole> getRoles() {
 		return roles;
 	}

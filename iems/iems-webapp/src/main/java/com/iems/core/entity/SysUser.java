@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -108,6 +109,7 @@ public class SysUser implements UserDetails, Serializable {
 
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
 	}
@@ -118,6 +120,7 @@ public class SysUser implements UserDetails, Serializable {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -152,6 +155,7 @@ public class SysUser implements UserDetails, Serializable {
 	}
 
 	
+	@JsonIgnore
 	public List<SysRole> getRoles() {
 		return roles;
 	}

@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -24,11 +25,13 @@ public class SysRole implements GrantedAuthority, ConfigAttribute, Serializable 
 	private static final long serialVersionUID = -8188036072737558973L;
 
 	@Override
+	@JsonIgnore
 	public String getAuthority() {
 		return rolecode;
 	}
 
 	@Override
+	@JsonIgnore
 	public String getAttribute() {
 		return rolecode;
 	}
@@ -85,6 +88,7 @@ public class SysRole implements GrantedAuthority, ConfigAttribute, Serializable 
 		this.rolename = rolename;
 	}
 
+	@JsonIgnore
 	public List<SysUser> getUsers() {
 		return users;
 	}
@@ -93,6 +97,7 @@ public class SysRole implements GrantedAuthority, ConfigAttribute, Serializable 
 		this.users = users;
 	}
 
+	@JsonIgnore
 	public List<SysResource> getResources() {
 		return resources;
 	}

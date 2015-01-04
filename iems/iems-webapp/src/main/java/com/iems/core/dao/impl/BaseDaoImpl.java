@@ -371,7 +371,9 @@ public class BaseDaoImpl<T, ID extends Serializable> implements IBaseDao<T, ID> 
 		Query query = this.getSession().createQuery(hql);
 		if (values != null) {
 			for (int i = 0; i < values.length; i++) {
-				query.setParameter(i, values[i]);
+				if (values[i] != null) {
+					query.setParameter(i, values[i]);
+				}
 			}
 		}
 		return (Long) query.uniqueResult();
@@ -401,7 +403,9 @@ public class BaseDaoImpl<T, ID extends Serializable> implements IBaseDao<T, ID> 
 		Query query = this.getSession().createQuery(hql);
 		if (values != null) {
 			for (int i = 0; i < values.length; i++) {
-				query.setParameter(i, values[i]);
+				if (values[i] != null) {
+					query.setParameter(i, values[i]);
+				}
 			}
 		}
 		int currentPage = pageNo > 1 ? pageNo : 1;

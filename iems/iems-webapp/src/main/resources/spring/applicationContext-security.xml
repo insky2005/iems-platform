@@ -148,17 +148,18 @@
 		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
 		<property name="hideUserNotFoundExceptions" value="false" />
 		<property name="userDetailsService" ref="userDetailsService" />
-		<property name="passwordEncoder" ref="plaintextPasswordEncoder" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
 		<property name="saltSource" ref="saltSource" />
 		<property name="userCache" ref="userCache" />
 	</bean>
 
 	<!-- 加密方式 -->
-	<bean id="md5PasswordEncoder"
+	<!-- 
+	<bean id="passwordEncoder"
 		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+	 -->
 		
-		
-	<bean id="plaintextPasswordEncoder"
+	<bean id="passwordEncoder"
     class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder" />
 
 	<!-- 配置加密盐值 -->

@@ -1,11 +1,11 @@
 package com.iems.core.dao.impl;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.iems.core.dao.ISysUserDao;
 import com.iems.core.entity.SysUser;
 
-@Component
+@Repository
 public class SysUserDaoImpl extends BaseDaoImpl<SysUser, String> implements ISysUserDao {
 
 	@Override
