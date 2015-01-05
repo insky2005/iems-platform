@@ -18,7 +18,7 @@
 	<!-- <mvc:default-servlet-handler /> -->
 
 	<!-- 视图解析 -->
-	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	<bean id="restUrlBasedViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<!-- 返回的视图模型数据需要经过jstl来处理 -->
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.JstlView" />
@@ -28,22 +28,26 @@
 
 	<bean id="stringConverter"
 		class="org.springframework.http.converter.StringHttpMessageConverter">
-		<property name="supportedMediaTypes">
-			<list>
-				<value>text/plain;charset=UTF-8</value>
-			</list>
-		</property>
 	</bean>
 
 	<!-- 输出对象转JSON支持 -->
 	<bean id="jsonConverter"
 		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
+		
 
-	<bean
+	<bean id="restRequestMappingHandlerMapping"
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
 
-	<bean
+	<bean id="restRequestMappingHandlerAdapter"
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		
+		<property name="messageConverters">
+		  <list>
+        <ref bean="stringConverter" />
+        <ref bean="jsonConverter" />
+      </list>
+		</property>
+
 		<property name="returnValueHandlers">
 			<list>
 				<bean

@@ -36,16 +36,18 @@ public class UserRestController {
 		return pageResults;
 	}
 
-	@RequestMapping(value = "user/{userid}", method = RequestMethod.GET)
-	public @ResponseBody SysUser getUser(@PathVariable("userid") String userid) {
+	@RequestMapping(value = "users/{userid}", method = RequestMethod.GET)
+	public @ResponseBody SysUser getUser(
+			@PathVariable("userid") String userid) {
 		logger.info("获取人员信息userid=" + userid);
 
 		SysUser user = userServiceImpl.getUser(userid);
 		return user;
 	}
 
-	@RequestMapping(value = "user", method = RequestMethod.POST)
-	public @ResponseBody Object addUser(SysUser user) {
+	@RequestMapping(value = "users", method = RequestMethod.POST)
+	public @ResponseBody Object addUser(
+			@RequestBody SysUser user) {
 		logger.info("注册人员信息成功id=" + user.getUserid());
 
 		userServiceImpl.addUser(user);
@@ -55,9 +57,10 @@ public class UserRestController {
 		return jsonObject;
 	}
 
-	@RequestMapping(value = "user/{userid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "users/{userid}", method = RequestMethod.PUT)
 	public @ResponseBody Object updateUser(
-			@PathVariable("userid") String userid, SysUser user) {
+			@PathVariable("userid") String userid, 
+			@RequestBody SysUser user) {
 		logger.info("更新人员信息id=" + userid);
 
 		userServiceImpl.updateUser(user);
@@ -67,8 +70,9 @@ public class UserRestController {
 		return jsonObject;
 	}
 
-	@RequestMapping(value = "user/{userid}", method = RequestMethod.DELETE)
-	public @ResponseBody Object deleteUser(@PathVariable("userid") String userid) {
+	@RequestMapping(value = "users/{userid}", method = RequestMethod.DELETE)
+	public @ResponseBody Object deleteUser(
+			@PathVariable("userid") String userid) {
 		logger.info("删除人员信息id=" + userid);
 
 		userServiceImpl.deleteUser(userid);
@@ -78,24 +82,24 @@ public class UserRestController {
 		return jsonObject;
 	}
 
+	@RequestMapping(value = "users/{userid}/roles", method = RequestMethod.GET)
+	public @ResponseBody List<SysRole> getUserRolesByUsername(
+			@PathVariable("userid") String userid) {
+		logger.info("获取人员信息userid=" + userid);
+
+		SysUser user = userServiceImpl.getUser(userid);
+
+		return user.getRoles();
+	}
 	
-	@RequestMapping(value = "user/username/{username}", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "users/username", method = RequestMethod.GET)
 	public @ResponseBody SysUser getUserByUsername(
-			@PathVariable("username") String username) {
+			@RequestParam(value = "username", required = true) String username) {
 		logger.info("获取人员信息userid=" + username);
 
 		SysUser user = userServiceImpl.getUserByUsername(username);
 		return user;
-	}
-
-	@RequestMapping(value = "user/username/{username}/roles", method = RequestMethod.GET)
-	public @ResponseBody List<SysRole> getUserRolesByUsername(
-			@PathVariable("username") String username) {
-		logger.info("获取人员信息userid=" + username);
-
-		SysUser user = userServiceImpl.getUserByUsername(username);
-
-		return user.getRoles();
 	}
 
 	@Autowired
@@ -103,12 +107,12 @@ public class UserRestController {
 	@Autowired
 	private SaltSource saltSource;
 
-	@RequestMapping(value = "user/username/{username}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "users/password", method = RequestMethod.PATCH)
 	public @ResponseBody Object updateUserPasswordByUsername(
-			@PathVariable("username") String username,
-			@RequestParam(value = "password", required = false) String password,
-			@RequestParam(value = "newpassword", required = false) String newpassword,
-			@RequestParam(value = "confirmpassword", required = false) String confirmpassword) {
+			@RequestParam(value = "username", required = true) String username,
+			@RequestParam(value = "password", required = true) String password,
+			@RequestParam(value = "newpassword", required = true) String newpassword,
+			@RequestParam(value = "confirmpassword", required = true) String confirmpassword) {
 		logger.info("更新人员信息id=" + username);
 
 		JSONObject jsonObject = new JSONObject();
@@ -135,8 +139,8 @@ public class UserRestController {
 			if (!newpassword.equals(confirmpassword)) {
 				throw new Exception("新密码和确认密码必须一致");
 			}
-
-			user.setPassword(newpassword);
+			
+			user.setPassword(passwordEncoder.encodePassword(newpassword, salt));
 
 			userServiceImpl.updateUser(user);
 

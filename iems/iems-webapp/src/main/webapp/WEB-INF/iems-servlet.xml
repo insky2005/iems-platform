@@ -18,10 +18,10 @@
 		<property name="customModelAndViewResolvers"> <bean class="com.iems.core.web.servlet.view.DefaultModelAndViewResolver"/> 
 		</property> </bean> -->
 
-	<bean
+	<bean id="iemsRequestMappingHandlerMapping"
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
 
-	<bean
+	<bean id="iemsRequestMappingHandlerAdapter"
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="returnValueHandlers">
 			<list>
@@ -37,7 +37,7 @@
 	</bean>
 
 	<!-- 配置视图解析器 -->
-	<bean
+	<bean id="iemsInternalResourceViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.JstlView" />

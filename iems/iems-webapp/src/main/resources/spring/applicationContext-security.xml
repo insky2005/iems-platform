@@ -16,7 +16,7 @@
 	<security:http pattern="/getCode" security="none" /><!-- 不过滤验证码 -->
 	<security:http pattern="/test/**" security="none" /><!-- 不过滤测试内容 -->
 
-  <security:http pattern="/api/**" security="none" />
+  <security:http pattern="/api/**" create-session="stateless" security="none" />
 	<!-- 
 	<security:http pattern="/api/**" create-session="stateless" entry-point-ref="digestEntryPoint" authentication-manager-ref="authenticationManager">
 	  <security:intercept-url pattern="/api/**" access="ROLE_USER" />
