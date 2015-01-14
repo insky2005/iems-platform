@@ -24,6 +24,7 @@
 		<security:access-denied-handler ref="oauth2AccessDeniedHandler" />
 	</security:http>
 
+  <!-- 
 	<security:http pattern="/api/**" create-session="never"
 	  authentication-manager-ref="authenticationManager"
 		entry-point-ref="oauth2AuthenticationEntryPoint"
@@ -35,10 +36,9 @@
 		<security:custom-filter ref="apiResourceServer" before="PRE_AUTH_FILTER" />
 		<security:access-denied-handler ref="oauth2AccessDeniedHandler" />
 	</security:http>
+   -->
 	
-	<!-- 
 	<security:http pattern="/api/**" create-session="stateless" security="none" />
-	 -->
 
   <!-- TODO: 
 	<bean id="tokenStore"
