@@ -1,10 +1,12 @@
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html ng-app="iEventApp">
   <head>
 		<meta charset="UTF-8">
-		<title>Dashboard</title>
+		<title>iEvent | Dashboard</title>
 
     <meta name="description" content="login page" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
@@ -39,13 +41,13 @@
     <![endif]-->
 
   </head>
-  <body class="skin-blue">
+  <body class="skin-blue fixed">
 
         <!-- header logo: style can be found in header.less -->
         <header class="header">
-            <a href="index.html" class="logo">
+            <a href="index.jsp" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                IEMS
+                iEvent
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -60,7 +62,7 @@
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
-                        <li class="dropdown messages-menu">
+                        <li class="dropdown messages-menu" ng-cloak>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-envelope"></i>
                                 <span class="label label-success">4</span>
@@ -136,7 +138,7 @@
                             </ul>
                         </li>
                         <!-- Notifications: style can be found in dropdown.less -->
-                        <li class="dropdown notifications-menu">
+                        <li class="dropdown notifications-menu" ng-cloak>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-warning"></i>
                                 <span class="label label-warning">10</span>
@@ -178,7 +180,7 @@
                             </ul>
                         </li>
                         <!-- Tasks: style can be found in dropdown.less -->
-                        <li class="dropdown tasks-menu">
+                        <li class="dropdown tasks-menu" ng-cloak>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-tasks"></i>
                                 <span class="label label-danger">9</span>
@@ -247,22 +249,25 @@
                                 </li>
                             </ul>
                         </li>
+                        
+                        
                         <!-- User Account: style can be found in dropdown.less -->
-                        <li class="dropdown user user-menu">
+                        <li class="dropdown user user-menu" ng-controller="ctrlUserMenu" ng-cloak>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span>Jane Doe <i class="caret"></i></span>
+                                <span>{{username}} <i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header bg-light-blue">
                                     <img src="assets/img/avatar3.png" class="img-circle" alt="User Image" />
                                     <p>
-                                        Jane Doe - Web Developer
+                                        <sec:authentication property="name"/> - Web Developer
                                         <small>Member since Nov. 2012</small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
+                                <%--
                                 <li class="user-body">
                                     <div class="col-xs-4 text-center">
                                         <a href="#">Followers</a>
@@ -274,6 +279,7 @@
                                         <a href="#">Friends</a>
                                     </div>
                                 </li>
+                                 --%>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
@@ -881,6 +887,15 @@
     <script src="assets/libs/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="assets/libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
     
+    <script src="assets/libs/RSA/jsbn.js"></script>
+    <script src="assets/libs/RSA/jsbn2.js"></script>
+    <script src="assets/libs/RSA/prng4.js"></script>
+    <script src="assets/libs/RSA/rng.js"></script>
+    <script src="assets/libs/RSA/rsa.js"></script>
+    <script src="assets/libs/RSA/rsa2.js"></script>
+    
+    <script src="assets/libs/angularjs/angular.min.js"></script>
+    
         <!-- Morris.js charts -->
         <script src="assets/libs/raphael/raphael-min.js"></script>
         <script src="assets/js/plugins/morris/morris.min.js" type="text/javascript"></script>
@@ -906,8 +921,13 @@
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
         <script src="assets/js/AdminLTE/dashboard.js" type="text/javascript"></script>
 
-        <!-- AdminLTE for demo purposes -->
-        <script src="assets/js/AdminLTE/demo.js" type="text/javascript"></script>
+        
+        <script src="js/iEvent/iEvent.js"></script>
+
+        <script src="js/iEvent/index/iEventIndex.js" type="text/javascript"></script>
+
+        <script src="js/iEvent/iEventApp.js" type="text/javascript"></script>
+        <script src="js/iEvent/ctrlUserMenu.js" type="text/javascript"></script>
 
   </body>
 </html>

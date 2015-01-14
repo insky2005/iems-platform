@@ -8,6 +8,13 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:spring/applicationContext.xml</param-value>
 	</context-param>
+
+  <filter>
+    <filter-name>oauthToken</filter-name>
+    <filter-class>com.iems.web.filter.OAuthTokenFilter
+    </filter-class>
+  </filter>
+
   <filter>
     <filter-name>openSessionInView</filter-name>
     <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter
@@ -36,6 +43,11 @@
 		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter
 		</filter-class>
 	</filter>
+	
+	<filter-mapping>
+	  <filter-name>oauthToken</filter-name>
+	  <url-pattern>/oauth/code</url-pattern>
+	</filter-mapping>
 
   <filter-mapping>
     <filter-name>openSessionInView</filter-name>
@@ -81,6 +93,16 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+  <servlet>
+    <servlet-name>oauth2</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet
+    </servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/oauth2-servlet.xml</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
 	
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
@@ -107,10 +129,29 @@
 		<servlet-name>iems</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>rest</servlet-name>
 		<url-pattern>/api/rest/*</url-pattern>
 	</servlet-mapping>
+	
+  <servlet-mapping>
+    <servlet-name>oauth2</servlet-name>
+    <url-pattern>/oauth/confirm_access</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>oauth2</servlet-name>
+    <url-pattern>/oauth/authorize</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>oauth2</servlet-name>
+    <url-pattern>/oauth/token</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>oauth2</servlet-name>
+    <url-pattern>/oauth/error</url-pattern>
+  </servlet-mapping>
+  
 
 	<jsp-config>
 		<taglib>

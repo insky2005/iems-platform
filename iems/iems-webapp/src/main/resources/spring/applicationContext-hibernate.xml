@@ -12,15 +12,6 @@
 		http://www.springframework.org/schema/jee 
 		http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
 
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:config/hibernate.properties</value>
-			</list>
-		</property>
-	</bean>
-
 	<!-- 
 	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/iems" resource-ref="true" />
    -->

@@ -9,6 +9,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import com.iems.core.dao.support.PageResults;
 import com.iems.core.entity.SysRole;
 import com.iems.core.entity.SysUser;
 import com.iems.core.service.IUserService;
+import com.iems.core.util.CounterUtil;
 
 @Controller
 @RequestMapping("/v1")
@@ -40,7 +43,7 @@ public class UserRestController {
 	public @ResponseBody SysUser getUser(
 			@PathVariable("userid") String userid) {
 		logger.info("获取人员信息userid=" + userid);
-
+		
 		SysUser user = userServiceImpl.getUser(userid);
 		return user;
 	}
@@ -50,6 +53,10 @@ public class UserRestController {
 			@RequestBody SysUser user) {
 		logger.info("注册人员信息成功id=" + user.getUserid());
 
+		if (user.getUserid() == null || user.getUserid().trim().length() == 0) {
+			user.setUserid(CounterUtil.increment(SysUser.class.getName()));
+		}
+		
 		userServiceImpl.addUser(user);
 
 		JSONObject jsonObject = new JSONObject();
@@ -83,7 +90,7 @@ public class UserRestController {
 	}
 
 	@RequestMapping(value = "users/{userid}/roles", method = RequestMethod.GET)
-	public @ResponseBody List<SysRole> getUserRolesByUsername(
+	public @ResponseBody List<SysRole> getUserRoles(
 			@PathVariable("userid") String userid) {
 		logger.info("获取人员信息userid=" + userid);
 
@@ -93,9 +100,17 @@ public class UserRestController {
 	}
 	
 	
-	@RequestMapping(value = "users/username", method = RequestMethod.GET)
+	@RequestMapping(value = "users/current", method = RequestMethod.GET)
+	public @ResponseBody Object current() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(authentication);
+
+		return authentication;
+	}
+	
+	@RequestMapping(value = "users/username/{username}", method = RequestMethod.GET)
 	public @ResponseBody SysUser getUserByUsername(
-			@RequestParam(value = "username", required = true) String username) {
+			@PathVariable("username") String username) {
 		logger.info("获取人员信息userid=" + username);
 
 		SysUser user = userServiceImpl.getUserByUsername(username);
