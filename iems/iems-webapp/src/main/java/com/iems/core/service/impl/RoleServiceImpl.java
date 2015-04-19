@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.iems.core.dao.ISysRoleDao;
 import com.iems.core.dao.support.PageResults;
+import com.iems.core.dao.support.SearchConditions;
 import com.iems.core.entity.SysRole;
 import com.iems.core.service.IRoleService;
 
@@ -15,24 +16,19 @@ public class RoleServiceImpl implements IRoleService {
 	private ISysRoleDao sysRoleDaoImpl;
 
 	@Override
-	public PageResults<SysRole> getRoles(String rolecode, String rolename,
-			int pageNo, int pageSize) {
-		String hql = "from SysRole where 1=1";
-		String countHql = "select count(*) from SysRole where 1=1";
+	public PageResults<SysRole> getRoles(int pageNo, int pageSize, 
+			SearchConditions<SysRole> searchConditions) {
+		String hqlSelect = "from SysRole where 1=1";
+		String hqlCount = "select count(*) from SysRole where 1=1";
+		
+		String whereClause = searchConditions.getConditionHql();
+		
+		Object[] values = searchConditions.getConditionValues();
 
-		if (rolecode != null) {
-			rolecode = "".concat("%").concat(rolecode).concat("%");
-			hql += " and rolecode like ?";
-			countHql += " and rolecode like ?";
-		}
+		hqlSelect += whereClause;
+		hqlCount += whereClause;
 
-		if (rolename != null) {
-			rolename = "".concat("%").concat(rolename).concat("%");
-			hql += " and rolename like ?";
-			countHql += " and rolename like ?";
-		}
-
-		return sysRoleDaoImpl.findPageByFetchedHql(hql, countHql, pageNo, pageSize, rolecode, rolename);
+		return sysRoleDaoImpl.findPageByFetchedHql(hqlSelect, hqlCount, pageNo, pageSize, values);
 	}
 
 	@Override
@@ -55,4 +51,10 @@ public class RoleServiceImpl implements IRoleService {
 		sysRoleDaoImpl.deleteById(roleid);
 	}
 
+	@Override
+	public SysRole getRoleByRolecode(String rolecode) {
+		SysRole sysRole = this.sysRoleDaoImpl.getRoleByRolecode(rolecode);
+
+		return sysRole;
+	}
 }

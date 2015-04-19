@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.iems.core.dao.support.PageResults;
+import com.iems.core.dao.support.SearchCondition;
+import com.iems.core.dao.support.SearchConditions;
 import com.iems.core.entity.SysResource;
 import com.iems.core.entity.SysRole;
 import com.iems.core.entity.SysUser;
@@ -36,17 +38,27 @@ public class RoleRestController {
 	public @ResponseBody PageResults<SysRole> listRole(
 			@RequestParam(value = "rolecode", required = false) String rolecode,
 			@RequestParam(value = "rolename", required = false) String rolename,
-			@RequestParam(value = "page", required = false, defaultValue = "1") int pageNo,
-			@RequestParam(value = "per_page", required = false, defaultValue = "20") int pageSize) {
-		PageResults<SysRole> pageResults = roleServiceImpl.getRoles(rolecode, rolename,
-				pageNo, pageSize);
+			@RequestParam(value = "iDisplayStart", required = false, defaultValue = "1") int iDisplayStart,
+			@RequestParam(value = "iDisplayLength", required = false, defaultValue = "20") int iDisplayLength) {
+
+		int pageNo = iDisplayStart / iDisplayLength + 1;
+		int pageSize = iDisplayLength;
+
+		SearchConditions<SysRole> searchConditions = new SearchConditions<SysRole>();
+		searchConditions.add(new SearchCondition("rolecode", "like", rolecode));
+		searchConditions.add(new SearchCondition("rolename", "like", rolename));
+		
+		PageResults<SysRole> pageResults = 
+				roleServiceImpl.getRoles(pageNo, pageSize, 
+				searchConditions);
+		
 		return pageResults;
 	}
 
 	@RequestMapping(value = "roles/{roleid}", method = RequestMethod.GET)
 	public @ResponseBody SysRole getRole(
 			@PathVariable("roleid") String roleid) {
-		logger.info("获取人员信息roleid=" + roleid);
+		logger.info("获取角色信息roleid=" + roleid);
 
 		SysRole role = roleServiceImpl.getRole(roleid);
 		return role;
@@ -55,7 +67,7 @@ public class RoleRestController {
 	@RequestMapping(value = "roles", method = RequestMethod.POST)
 	public @ResponseBody Object addRole(
 			@RequestBody SysRole role) {
-		logger.info("注册人员信息成功id=" + role.getRoleid());
+		logger.info("注册角色信息成功id=" + role.getRoleid());
 
 		if (role.getRoleid() == null || role.getRoleid().trim().length() == 0) {
 			role.setRoleid(CounterUtil.increment(SysRole.class.getName()));
@@ -64,7 +76,7 @@ public class RoleRestController {
 		roleServiceImpl.addRole(role);
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "注册人员信息成功");
+		jsonObject.put("msg", "注册角色信息成功");
 		return jsonObject;
 	}
 
@@ -72,31 +84,31 @@ public class RoleRestController {
 	public @ResponseBody Object updateRole(
 			@PathVariable("roleid") String roleid, 
 			@RequestBody SysRole role) {
-		logger.info("更新人员信息id=" + roleid);
+		logger.info("更新角色信息id=" + roleid);
 
 		roleServiceImpl.updateRole(role);
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "更新人员信息成功");
+		jsonObject.put("msg", "更新角色信息成功");
 		return jsonObject;
 	}
 
 	@RequestMapping(value = "roles/{roleid}", method = RequestMethod.DELETE)
 	public @ResponseBody Object deleteRole(
 			@PathVariable("roleid") String roleid) {
-		logger.info("删除人员信息id=" + roleid);
+		logger.info("删除角色信息id=" + roleid);
 
 		roleServiceImpl.deleteRole(roleid);
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "删除人员信息成功");
+		jsonObject.put("msg", "删除角色信息成功");
 		return jsonObject;
 	}
 
 	@RequestMapping(value = "roles/{roleid}/users", method = RequestMethod.GET)
 	public @ResponseBody List<SysUser> getRoleUsers(
 			@PathVariable("roleid") String roleid) {
-		logger.info("获取人员信息roleid=" + roleid);
+		logger.info("获取角色的用户信息roleid=" + roleid);
 
 		SysRole role = roleServiceImpl.getRole(roleid);
 
@@ -106,9 +118,38 @@ public class RoleRestController {
 	@RequestMapping(value = "roles/{roleid}/resources", method = RequestMethod.GET)
 	public @ResponseBody List<SysResource> getRoleResources(
 			@PathVariable("roleid") String roleid) {
-		logger.info("获取人员信息roleid=" + roleid);
+		logger.info("获取角色的资源信息roleid=" + roleid);
 
 		SysRole role = roleServiceImpl.getRole(roleid);
+
+		return role.getResources();
+	}
+	
+	@RequestMapping(value = "roles/rolecode/{rolecode}", method = RequestMethod.GET)
+	public @ResponseBody SysRole getRoleByRolecode(
+			@PathVariable("rolecode") String rolecode) {
+		logger.info("获取角色信息rolecode=" + rolecode);
+
+		SysRole role = roleServiceImpl.getRoleByRolecode(rolecode);
+		return role;
+	}
+	
+	@RequestMapping(value = "roles/rolecode/{rolecode}/users", method = RequestMethod.GET)
+	public @ResponseBody List<SysUser> getRoleUsersByRolecode(
+			@PathVariable("rolecode") String rolecode) {
+		logger.info("获取角色的用户信息rolecode=" + rolecode);
+
+		SysRole role = roleServiceImpl.getRoleByRolecode(rolecode);
+
+		return role.getUsers();
+	}
+	
+	@RequestMapping(value = "roles/rolecode/{rolecode}/resources", method = RequestMethod.GET)
+	public @ResponseBody List<SysResource> getRoleResourcesByRolecode(
+			@PathVariable("rolecode") String rolecode) {
+		logger.info("获取角色的资源信息rolecode=" + rolecode);
+
+		SysRole role = roleServiceImpl.getRoleByRolecode(rolecode);
 
 		return role.getResources();
 	}

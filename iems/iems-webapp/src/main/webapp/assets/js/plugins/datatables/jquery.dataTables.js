@@ -2022,6 +2022,7 @@
 			{
 				_fnClearTable( oSettings );
 			}
+			
 			oSettings._iRecordsTotal = parseInt(json.iTotalRecords, 10);
 			oSettings._iRecordsDisplay = parseInt(json.iTotalDisplayRecords, 10);
 			

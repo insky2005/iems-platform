@@ -104,10 +104,10 @@ public class FilterInvocationSecurityMetadataSourceImpl
 
 		Iterator<String> ite = resourceMap.keySet().iterator();
 		while (ite.hasNext()) {
-			String resURL = ite.next();	System.out.println("resURL:"+resURL);
+			String resURL = ite.next();	// System.out.println("resURL:"+resURL);
 
 			if (resURL.equals(url)) {
-				System.out.println("匹配?" + resURL.equals(url));
+				System.out.println("匹配?true,resURL:" + resURL);
 				return resourceMap.get(resURL);
 			}
 			

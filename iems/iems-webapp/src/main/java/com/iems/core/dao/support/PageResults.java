@@ -20,7 +20,7 @@ public class PageResults<T> {
 
 	// 记录
 	private List<T> results;
-
+	
 	public int getPageCount() {
 		return pageCount;
 	}
@@ -78,4 +78,15 @@ public class PageResults<T> {
 		pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
 	}
+	
+	
+	// 兼容DataTables 1.9.4
+	public int getiTotalRecords() {
+		return totalCount;
+	}
+	
+	public int getiTotalDisplayRecords() {
+		return totalCount;
+	}
+	
 }

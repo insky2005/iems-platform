@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.iems.core.dao.ISysResourceDao;
 import com.iems.core.dao.support.PageResults;
+import com.iems.core.dao.support.SearchConditions;
 import com.iems.core.entity.SysResource;
 import com.iems.core.service.IResourceService;
 import com.iems.security.access.resourcedetails.ResourceDetails;
@@ -26,24 +27,19 @@ public class ResourceServiceImpl implements ResourceDetailsService, IResourceSer
 	}
 
 	@Override
-	public PageResults<SysResource> getResources(String resourcecode, String resourcename, 
-			int pageNo, int pageSize) {
-		String hql = "from SysResource where 1=1";
-		String countHql = "select count(*) from SysResource where 1=1";
+	public PageResults<SysResource> getResources(int pageNo, int pageSize, 
+			SearchConditions<SysResource> searchConditions) {
+		String hqlSelect = "from SysResource where 1=1";
+		String hqlCount = "select count(*) from SysResource where 1=1";
 
-		if (resourcecode != null) {
-			resourcecode = "".concat("%").concat(resourcecode).concat("%");
-			hql += " and resourcecode like ?";
-			countHql += " and resourcecode like ?";
-		}
+		String whereClause = searchConditions.getConditionHql();
+		
+		Object[] values = searchConditions.getConditionValues();
+		
+		hqlSelect += whereClause;
+		hqlCount += whereClause;
 
-		if (resourcename != null) {
-			resourcename = "".concat("%").concat(resourcename).concat("%");
-			hql += " and resourcename like ?";
-			countHql += " and resourcename like ?";
-		}
-
-		return sysResourceDaoImpl.findPageByFetchedHql(hql, countHql, pageNo, pageSize, resourcecode, resourcename);
+		return sysResourceDaoImpl.findPageByFetchedHql(hqlSelect, hqlCount, pageNo, pageSize, values);
 	}
 
 	@Override
@@ -66,4 +62,11 @@ public class ResourceServiceImpl implements ResourceDetailsService, IResourceSer
 		sysResourceDaoImpl.deleteById(resourceid);
 	}
 
+	@Override
+	public SysResource getResourceByResourcecode(String resourcecode) {
+		SysResource sysResource = this.sysResourceDaoImpl.getResourceByResourcecode(resourcecode);
+
+		return sysResource;
+	}
+	
 }

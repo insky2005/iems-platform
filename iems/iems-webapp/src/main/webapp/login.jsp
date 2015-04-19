@@ -81,7 +81,7 @@
 		
     <script src="js/iEvent/iEvent.js"></script>
     
-    <script src="js/iEvent/login/iEventLogin.js"></script>
+    <script src="js/iEvent/iEventLogin.js"></script>
     
   </body>
 </html>

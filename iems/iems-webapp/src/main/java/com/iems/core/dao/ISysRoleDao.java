@@ -4,4 +4,6 @@ import com.iems.core.entity.SysRole;
 
 public interface ISysRoleDao extends IBaseDao<SysRole, String> {
 
+	SysRole getRoleByRolecode(String rolecode);
+
 }

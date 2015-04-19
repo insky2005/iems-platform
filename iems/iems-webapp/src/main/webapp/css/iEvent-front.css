@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+
+
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	text-align: center;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.center {
+	text-align: center;
+}
+.right {
+	text-align: right;
+}

@@ -17,6 +17,7 @@
 	<security:http pattern="/getCode" security="none" /><!-- 不过滤验证码 -->
 	<security:http pattern="/test/**" security="none" /><!-- 不过滤测试内容 -->
 
+  <security:http pattern="/front/**" security="none" />
 
 	<security:http auto-config="true" authentication-manager-ref="authenticationManager">
 	  <!-- 
@@ -41,10 +42,10 @@
         <security:concurrency-control />
     </security:session-management>
 
-		<security:form-login login-page="/login.jsp"
-			authentication-failure-url="/login.jsp?error=true" default-target-url="${target_url}" />
+		<security:form-login login-page="${server_url}/login.jsp"
+			authentication-failure-url="${server_url}/login.jsp?error=true" default-target-url="${target_url}" always-use-default-target="true" />
 			
-		<security:logout logout-success-url="/login.jsp" />
+		<security:logout logout-success-url="${server_url}/login.jsp" />
 		
 		<security:remember-me services-ref="rememberMeServices" />
 		

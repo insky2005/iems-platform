@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+
+
+.w_50per {
+	width : 50%;
+}
+
+.h_90px {
+	height : 90px;
+}
+
+.h_150px {
+	height : 150px;
+}
+
+.h_300px {
+	height : 300px;
+}
+
+.padding-right_15px {
+	padding-right: 15px;
+}

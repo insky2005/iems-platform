@@ -8,4 +8,6 @@ public interface ISysResourceDao extends IBaseDao<SysResource, String> {
 
 	List<SysResource> loadResourceDetails();
 
+	SysResource getResourceByResourcecode(String resourcecode);
+
 }

@@ -376,7 +376,12 @@ public class BaseDaoImpl<T, ID extends Serializable> implements IBaseDao<T, ID> 
 				}
 			}
 		}
-		return (Long) query.uniqueResult();
+		Object result = query.uniqueResult();
+		
+		if (result != null)
+			return (Long) result;
+		
+		return 0L;
 	}
 
 	/**

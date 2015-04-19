@@ -3,11 +3,10 @@
  */
 
 iEventApp.controller('ctrlUserMenu', ["$scope", "$http", "$location", function($scope, $http, $location) {
-	$scope.username = "Jane Doe";
-	
-	$http.get(iEvent.api_prefix+"/users/current", {"access_token" : iEvent.access_token}).success(
+	var sUrl = iEvent.api_url("/v1/users/current");
+	$http.get(sUrl).success(
 		function(json) {
-			alert(json.principal.username);
+			angular.extend($scope, json);
 		}
 	);
 	

@@ -16,8 +16,8 @@ public class HelloController extends AbstractWebController {
 	@Autowired
 	private IUserService userServiceImpl;
 	
-	@RequestMapping(value="/index")
-	public ModelAndView index(){
+	@RequestMapping(value="/index2")
+	public ModelAndView index2(){
 		ModelAndView mav = new ModelAndView("/hello/hello","msg","SpringMvc, Hello World!");
 		return mav;
 	}

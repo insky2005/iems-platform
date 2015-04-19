@@ -29,11 +29,18 @@ public class SysUser implements UserDetails, Serializable {
 	@Column(name="USERID")
 	private String userid;
 
+	/**
+	 * 不能为带有 @ 的字符串
+	 * 不能为 11位纯数字的字符串
+	 */
 	@Column(name="USERNAME", length=100, unique=true)
 	private String username;
 	
 	@Column(name="PASSWORD", length=500)
 	private String password;
+	
+	@Column(name="USERTYPE", length=50)
+	private String usertype;
 	
 	@Column(name="ENABLED")
 	private boolean enabled = true;
@@ -60,11 +67,12 @@ public class SysUser implements UserDetails, Serializable {
 		
 	}
 	
-	public SysUser(String userid, String username, String password, boolean enabled, String email, String mobile) {
+	public SysUser(String userid, String username, String password, String usertype, boolean enabled, String email, String mobile) {
 		super();
 		this.userid = userid;
 		this.username = username;
 		this.password = password;
+		this.usertype = usertype;
 		
 		this.enabled = enabled;
 		
@@ -85,6 +93,9 @@ public class SysUser implements UserDetails, Serializable {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public void setUsertype(String usertype) {
+		this.usertype = usertype;
 	}
 	
 	public void setEnabled(boolean enabled) {
@@ -124,7 +135,11 @@ public class SysUser implements UserDetails, Serializable {
 	public String getPassword() {
 		return password;
 	}
-
+	
+	public String getUsertype() {
+		return usertype;
+	}
+	
 	@Override
 	public boolean isEnabled() {
 		return enabled;
